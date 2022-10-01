@@ -120,9 +120,7 @@ impl Plotter {
 
     fn plotter_context_menu(&mut self, ui: &mut egui::Ui) {
         ui.menu_button("Plotter", |ui| {
-
-            ui.menu_button("Plot provider", |ui|{
-
+            ui.menu_button("Plot provider", |ui| {
                 if ui.button("egui").clicked() {
                     self.plot_provider = PlotProvider::Egui;
                     ui.close_menu();
@@ -145,11 +143,9 @@ impl Plotter {
         });
     }
 
-    fn plot_context_menu(&mut self, ui: &mut egui::Ui){
+    fn plot_context_menu(&mut self, ui: &mut egui::Ui) {
         ui.menu_button("Plot", |ui| {
-
             ui.menu_button("Plot 2d", |ui| {
-
                 if ui.button("Function").clicked() {
                     self.plot_type = PlotType::Function2d;
                     self.are_data_computed = false;
@@ -217,7 +213,7 @@ impl Plotter {
         });
     }
 
-    fn utils_context_menu(&mut self, ui: &mut egui::Ui){
+    fn utils_context_menu(&mut self, ui: &mut egui::Ui) {
         ui.menu_button("Utils", |ui| {
             ui.menu_button("Calculus", |ui| {
                 if ui.button("Curvature").clicked() {
@@ -250,7 +246,7 @@ impl Plotter {
         });
     }
 
-    fn export_context_menu(&mut self, ui: &mut egui::Ui){
+    fn export_context_menu(&mut self, ui: &mut egui::Ui) {
         ui.menu_button("Export", |ui| {
             if ui.button("png").clicked() {
                 //TODO

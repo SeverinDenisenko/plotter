@@ -1,7 +1,7 @@
 use meval::Expr;
 
 impl crate::Plotter {
-    pub fn parse_equal_grid(&mut self) -> (f64, f64, u32){
+    pub fn parse_equal_grid(&mut self) -> (f64, f64, u32) {
         let n_t = self.intervals_amount.parse();
 
         let a = Self::evaluate_string(self.lower_limit.to_owned());
@@ -15,9 +15,8 @@ impl crate::Plotter {
         return (a, b, n);
     }
 
-    pub fn compute_equal_grid(&mut self, a: f64, b: f64, n: u32){
+    pub fn compute_equal_grid(&mut self, a: f64, b: f64, n: u32) {
         if !self.are_data_computed {
-
             let f = Self::get_parsed_function(self.function.to_owned(), "x".to_owned());
 
             self.points.clear();
@@ -32,9 +31,8 @@ impl crate::Plotter {
         }
     }
 
-    pub fn compute_parametric_equal_grid(&mut self, a: f64, b: f64, n: u32){
+    pub fn compute_parametric_equal_grid(&mut self, a: f64, b: f64, n: u32) {
         if !self.are_data_computed {
-
             let x = Self::get_parsed_function(self.parametric1.to_owned(), "t".to_owned());
             let y = Self::get_parsed_function(self.parametric2.to_owned(), "t".to_owned());
 
@@ -50,9 +48,8 @@ impl crate::Plotter {
         }
     }
 
-    pub fn compute_polar_equal_grid(&mut self, a: f64, b: f64, n: u32){
+    pub fn compute_polar_equal_grid(&mut self, a: f64, b: f64, n: u32) {
         if !self.are_data_computed {
-
             let r = Self::get_parsed_function(self.polar.to_owned(), "a".to_owned());
 
             self.points.clear();
@@ -68,7 +65,7 @@ impl crate::Plotter {
         }
     }
 
-    fn get_parsed_function(string: String, variable: String) -> impl Fn(f64) -> f64{
+    fn get_parsed_function(string: String, variable: String) -> impl Fn(f64) -> f64 {
         let expr = match string.parse::<Expr>() {
             Ok(res) => res,
             Err(_) => variable.parse().unwrap()
@@ -90,5 +87,4 @@ impl crate::Plotter {
 
         return val;
     }
-
 }

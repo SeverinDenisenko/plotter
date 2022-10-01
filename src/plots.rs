@@ -14,52 +14,52 @@ pub enum PlotType {
     Equation3d,
 }
 
-pub enum PlotProvider{
+pub enum PlotProvider {
     Egui,
     Plotters,
-    Poloto
+    Poloto,
 }
 
 impl crate::Plotter {
 
     //////// Plots for different plot types and providers ////////
 
-    pub fn plot(&mut self, ui: &mut egui::Ui){
+    pub fn plot(&mut self, ui: &mut egui::Ui) {
         match self.plot_type {
 
             // 2D
             PlotType::Function2d => {
                 self.plot_function2d(ui);
-            },
+            }
             PlotType::Parametric2d => {
                 self.plot_parametric2d(ui);
-            },
+            }
             PlotType::Polar2d => {
                 self.plot_polar2d(ui);
-            },
+            }
             PlotType::Equation2d => {
                 self.plot_equation2d(ui);
-            },
+            }
             PlotType::High2d => {
                 self.plot_high2d(ui);
-            },
+            }
 
             // Data
             PlotType::Scatter2d => {
                 self.plot_scatter2d(ui);
-            },
+            }
             PlotType::Linear2d => {
                 self.plot_linear2d(ui);
-            },
+            }
             PlotType::Histogram2d => {
                 self.plot_histogram2d(ui);
-            },
+            }
 
             // 3D
 
             PlotType::Parametric3d => {
                 self.plot_parametric3d(ui);
-            },
+            }
             PlotType::Equation3d => {
                 self.plot_equation3d(ui);
             }
@@ -68,15 +68,15 @@ impl crate::Plotter {
 
     //////// Plot functions for type ////////
 
-    fn plot_function2d(&mut self, ui: &mut egui::Ui){
+    fn plot_function2d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 self.plot_function2d_egui(ui);
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -84,16 +84,16 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_equation2d(&mut self, ui: &mut egui::Ui){
+    fn plot_equation2d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -101,15 +101,15 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_parametric2d(&mut self, ui: &mut egui::Ui){
+    fn plot_parametric2d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 self.plot_parametric2d_egui(ui);
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -117,15 +117,15 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_polar2d(&mut self, ui: &mut egui::Ui){
+    fn plot_polar2d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 self.plot_polar2d_egui(ui);
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -133,16 +133,16 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_high2d(&mut self, ui: &mut egui::Ui){
+    fn plot_high2d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -150,16 +150,16 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_scatter2d(&mut self, ui: &mut egui::Ui){
+    fn plot_scatter2d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -167,16 +167,16 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_linear2d(&mut self, ui: &mut egui::Ui){
+    fn plot_linear2d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -184,16 +184,16 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_histogram2d(&mut self, ui: &mut egui::Ui){
+    fn plot_histogram2d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -201,16 +201,16 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_parametric3d(&mut self, ui: &mut egui::Ui){
+    fn plot_parametric3d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -218,16 +218,16 @@ impl crate::Plotter {
         }
     }
 
-    fn plot_equation3d(&mut self, ui: &mut egui::Ui){
+    fn plot_equation3d(&mut self, ui: &mut egui::Ui) {
         match self.plot_provider {
             PlotProvider::Egui => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Poloto => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
-            },
+            }
             PlotProvider::Plotters => {
                 ui.label(RichText::new("Not implemented.").color(Color32::RED));
                 //TODO
@@ -238,7 +238,6 @@ impl crate::Plotter {
     //////// Specific plot functions for providers and types ////////
 
     fn plot_function2d_egui(&mut self, ui: &mut egui::Ui) {
-
         let (a, b, n) = self.parse_equal_grid();
 
         self.compute_equal_grid(a, b, n);
@@ -246,7 +245,7 @@ impl crate::Plotter {
         self.plot_points_egui(ui, n);
     }
 
-    fn plot_parametric2d_egui(&mut self, ui: &mut egui::Ui){
+    fn plot_parametric2d_egui(&mut self, ui: &mut egui::Ui) {
         let (a, b, n) = self.parse_equal_grid();
 
         self.compute_parametric_equal_grid(a, b, n);
@@ -254,7 +253,7 @@ impl crate::Plotter {
         self.plot_points_egui(ui, n);
     }
 
-    fn plot_polar2d_egui(&mut self, ui: &mut egui::Ui){
+    fn plot_polar2d_egui(&mut self, ui: &mut egui::Ui) {
         let (a, b, n) = self.parse_equal_grid();
 
         self.compute_polar_equal_grid(a, b, n);
@@ -264,7 +263,7 @@ impl crate::Plotter {
 
     //////// Common patterns ////////
 
-    fn plot_points_egui(&mut self, ui: &mut egui::Ui, n: u32){
+    fn plot_points_egui(&mut self, ui: &mut egui::Ui, n: u32) {
         let sin: PlotPoints = (0..n + 1).map(|i| {
             self.points[i as usize]
         }).collect();
