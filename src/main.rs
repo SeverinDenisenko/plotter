@@ -8,6 +8,7 @@ use egui::Vec2;
 
 mod utils;
 mod plots;
+mod inputs;
 
 use plots::*;
 
@@ -38,7 +39,11 @@ fn main() {
 struct Plotter {
     // Plotting
 
-    equation: String,
+    function: String,
+    parametric1: String,
+    parametric2: String,
+    polar: String,
+
     lower_limit: String,
     higher_limit: String,
     intervals_amount: String,
@@ -48,7 +53,6 @@ struct Plotter {
 
     // Data
 
-    parameter: Vec<f64>,
     points: Vec<[f64; 2]>,
     are_data_computed: bool,
 
@@ -61,7 +65,11 @@ struct Plotter {
 impl Default for Plotter {
     fn default() -> Self {
         Self {
-            equation: "y = tan(x)".to_owned(),
+            function: "tan(x)".to_owned(),
+            parametric1: "sin(t)".to_owned(),
+            parametric2: "cos(t)".to_owned(),
+            polar: "a".to_owned(),
+
             lower_limit: "0.0".to_owned(),
             higher_limit: "1.0".to_owned(),
             intervals_amount: "100".to_owned(),
@@ -69,7 +77,6 @@ impl Default for Plotter {
             plot_provider: PlotProvider::Egui,
             plot_type: PlotType::Function2d,
 
-            parameter: vec![],
             points: vec![],
             are_data_computed: false,
 
@@ -149,14 +156,20 @@ impl Plotter {
                     ui.close_menu();
                 }
 
-                if ui.button("Equation").clicked() {
-                    self.plot_type = PlotType::Equation2d;
+                if ui.button("Parametric").clicked() {
+                    self.plot_type = PlotType::Parametric2d;
                     self.are_data_computed = false;
                     ui.close_menu();
                 }
 
-                if ui.button("Parametric").clicked() {
-                    self.plot_type = PlotType::Parametric2d;
+                if ui.button("Polar").clicked() {
+                    self.plot_type = PlotType::Polar2d;
+                    self.are_data_computed = false;
+                    ui.close_menu();
+                }
+
+                if ui.button("Equation").clicked() {
+                    self.plot_type = PlotType::Equation2d;
                     self.are_data_computed = false;
                     ui.close_menu();
                 }
