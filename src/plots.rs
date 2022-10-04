@@ -271,8 +271,6 @@ impl crate::Plotter {
         let line = Line::new(sin);
 
         Plot::new("Plot")
-            .width(self.width - 15.0)
-            .height(self.height - 140.0)
             .data_aspect(1.0)
             .show(ui, |plot_ui| plot_ui.line(line));
     }

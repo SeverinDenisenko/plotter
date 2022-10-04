@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
 use eframe::{egui, Theme};
+use egui_extras::{Size, StripBuilder};
 
 use std::env;
 use std::process::exit;
@@ -20,7 +21,7 @@ fn main() {
 
         let options = eframe::NativeOptions {
             default_theme: Theme::Light,
-            initial_window_size: Option::from(Vec2::new(600.0, 660.0)),
+            initial_window_size: Option::from(Vec2::new(900.0, 600.0)),
             ..Default::default()
         };
 
@@ -88,28 +89,41 @@ impl Default for Plotter {
 
 impl eframe::App for Plotter {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+
+        egui::TopBottomPanel::top("context_menu")
+            .resizable(false)
+            .show(ctx, |ui|{
+                ui.horizontal(|ui| {
+
+                    Plotter::global_dark_light_mode_switch(ui);
+
+                    self.add_context_menu(ui);
+                    self.utils_context_menu(ui);
+                    self.plotter_context_menu(ui);
+                    self.export_context_menu(ui);
+                });
+            });
+
+        egui::SidePanel::left("left_panel")
+            .resizable(true)
+            .show(ctx, |ui|{
+
+                self.input(ui);
+
+                ui.separator();
+            });
+
         egui::CentralPanel::default().show(ctx, |ui| {
             self.width = _frame.info().window_info.size.x;
             self.height = _frame.info().window_info.size.y;
 
-            ui.horizontal(|ui| {
-                Plotter::global_dark_light_mode_switch(ui);
-
-                ui.add(egui::Separator::default().vertical());
-
-                self.plotter_context_menu(ui);
-                self.plot_context_menu(ui);
-                self.utils_context_menu(ui);
-                self.export_context_menu(ui);
-            });
-
-            ui.separator();
-
-            self.input(ui);
-
-            ui.separator();
-
-            self.plot(ui);
+            StripBuilder::new(ui)
+                .size(Size::remainder())
+                .vertical(|mut strip| {
+                    strip.cell(|ui| {
+                        self.plot(ui);
+                    });
+                });
         });
     }
 }
@@ -143,8 +157,8 @@ impl Plotter {
         });
     }
 
-    fn plot_context_menu(&mut self, ui: &mut egui::Ui) {
-        ui.menu_button("Plot", |ui| {
+    fn add_context_menu(&mut self, ui: &mut egui::Ui) {
+        ui.menu_button("Add", |ui| {
             ui.menu_button("Plot 2d", |ui| {
                 if ui.button("Function").clicked() {
                     self.plot_type = PlotType::Function2d;

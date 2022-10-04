@@ -65,20 +65,19 @@ impl crate::Plotter {
     }
 
     fn input_parametric2d(&mut self, ui: &mut egui::Ui) {
-        ui.horizontal(|ui| {
-            ui.horizontal(|ui| {
-                ui.label("x(t): ");
-                if ui.text_edit_singleline(&mut self.parametric1).changed() {
-                    self.are_data_computed = false;
-                }
-            });
 
-            ui.horizontal(|ui| {
-                ui.label("y(t): ");
-                if ui.text_edit_singleline(&mut self.parametric2).changed() {
-                    self.are_data_computed = false;
-                }
-            });
+        ui.horizontal(|ui| {
+            ui.label("x(t): ");
+            if ui.text_edit_singleline(&mut self.parametric1).changed() {
+                self.are_data_computed = false;
+            }
+        });
+
+        ui.horizontal(|ui| {
+            ui.label("y(t): ");
+            if ui.text_edit_singleline(&mut self.parametric2).changed() {
+                self.are_data_computed = false;
+            }
         });
 
         self.input_uniform_grid(ui);
@@ -93,9 +92,9 @@ impl crate::Plotter {
     //////// Common patterns ////////
 
     fn input_uniform_grid(&mut self, ui: &mut egui::Ui) {
-        self.lower_limit = self.input_filed_string(ui, "Lower limit: ".to_string(), self.lower_limit.to_owned());
-        self.higher_limit = self.input_filed_string(ui, "Higher limit: ".to_string(), self.higher_limit.to_owned());
-        self.intervals_amount = self.input_filed_string(ui, "Intervals amount: ".to_string(), self.intervals_amount.to_owned());
+        self.lower_limit = self.input_filed_string(ui, "a: ".to_string(), self.lower_limit.to_owned());
+        self.higher_limit = self.input_filed_string(ui, "b: ".to_string(), self.higher_limit.to_owned());
+        self.intervals_amount = self.input_filed_string(ui, "n: ".to_string(), self.intervals_amount.to_owned());
     }
 
     fn input_filed_string(&mut self, ui: &mut egui::Ui, label: String, initial: String) -> String {
