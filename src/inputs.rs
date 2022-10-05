@@ -38,10 +38,14 @@ impl crate::Plotter {
                         _ => {}, // TODO
                     }
 
+                    ui.add_space(3.0);
+
                     ui.horizontal(|ui| {
                         if ui.button("Remove").clicked() && self.plots.len() != 1 {
                             plots_to_remove.push(i);
                         }
+
+                        egui::Ui::color_edit_button_rgb(ui, &mut self.plots[i].color);
                     });
 
                     ui.separator();

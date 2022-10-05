@@ -1,3 +1,5 @@
+use rand;
+
 pub enum PlotType {
     Function2d,
     Parametric2d,
@@ -31,6 +33,8 @@ pub struct PlotItem {
     pub n: u32,
     pub points: Vec<[f64; 2]>,
     pub are_data_computed: bool,
+
+    pub color: [f32; 3],
 }
 
 impl PlotItem {
@@ -48,6 +52,8 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }
     }
 
@@ -65,6 +71,8 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }
     }
 
@@ -82,6 +90,8 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }
     }
 }

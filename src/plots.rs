@@ -1,5 +1,5 @@
 use egui::plot::{Line, Plot, PlotPoints};
-use egui::{RichText, Color32};
+use egui::{Color32, Rgba};
 
 use crate::types::*;
 
@@ -37,7 +37,9 @@ impl crate::Plotter {
                             self.plots[j].points[i as usize]
                         }
                     ).collect::<PlotPoints>()
-                )
+                ).color(Color32::from(Rgba::from_rgb(self.plots[j].color[0],
+                                                     self.plots[j].color[1],
+                                                     self.plots[j].color[2])))
             )
         }
 
