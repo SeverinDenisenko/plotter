@@ -1,4 +1,4 @@
-use egui::ScrollArea;
+use egui::{ScrollArea, TextStyle};
 use crate::types::*;
 
 impl crate::Plotter {
@@ -11,19 +11,20 @@ impl crate::Plotter {
         ui.add_space(4.0);
 
         let num_rows = self.plots.len();
-        let row_height = 50.0;
+
+        let text_style = TextStyle::Body; // This does not make any scene
+        let row_height = ui.text_style_height(&text_style) * 7.8;
 
         ScrollArea::vertical()
-            .auto_shrink([false; 2])
+            .auto_shrink([false; 2]).stick_to_bottom(false)
             .show_rows(
             ui,
             row_height,
             num_rows,
-            |ui, _| {
+            |ui, row| {
 
-                for i in 0..self.plots.len() {
+                for i in row {
                     match self.plots[i].plot_type {
-
                         // 2D
                         PlotType::Function2d => {
                             self.input_function2d(ui, i);
@@ -47,6 +48,8 @@ impl crate::Plotter {
                 }
             },
         );
+
+        ui.add_space(4.0);
 
         for i in plots_to_remove {
             self.plots.remove(i);
