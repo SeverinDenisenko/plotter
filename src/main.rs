@@ -7,11 +7,12 @@ use std::env;
 use std::process::exit;
 use egui::Vec2;
 
-mod utils;
+mod types;
+mod compute;
 mod plots;
 mod inputs;
 
-use plots::*;
+use types::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -39,23 +40,9 @@ fn main() {
 
 struct Plotter {
     // Plotting
-
-    function: String,
-    parametric1: String,
-    parametric2: String,
-    polar: String,
-
-    lower_limit: String,
-    higher_limit: String,
-    intervals_amount: String,
-
+    number_of_plots: usize,
+    plots: Vec<PlotItem>,
     plot_provider: PlotProvider,
-    plot_type: PlotType,
-
-    // Data
-
-    points: Vec<[f64; 2]>,
-    are_data_computed: bool,
 
     // Window
 
@@ -66,20 +53,9 @@ struct Plotter {
 impl Default for Plotter {
     fn default() -> Self {
         Self {
-            function: "tan(x)".to_owned(),
-            parametric1: "sin(t)".to_owned(),
-            parametric2: "cos(t)".to_owned(),
-            polar: "a".to_owned(),
-
-            lower_limit: "0.0".to_owned(),
-            higher_limit: "1.0".to_owned(),
-            intervals_amount: "100".to_owned(),
-
+            number_of_plots: 1,
+            plots: vec![PlotItem::default_function()],
             plot_provider: PlotProvider::Egui,
-            plot_type: PlotType::Function2d,
-
-            points: vec![],
-            are_data_computed: false,
 
             width: 0.0,
             height: 0.0,
@@ -89,12 +65,10 @@ impl Default for Plotter {
 
 impl eframe::App for Plotter {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-
         egui::TopBottomPanel::top("context_menu")
             .resizable(false)
-            .show(ctx, |ui|{
+            .show(ctx, |ui| {
                 ui.horizontal(|ui| {
-
                     Plotter::global_dark_light_mode_switch(ui);
 
                     self.add_context_menu(ui);
@@ -106,11 +80,8 @@ impl eframe::App for Plotter {
 
         egui::SidePanel::left("left_panel")
             .resizable(true)
-            .show(ctx, |ui|{
-
-                self.input(ui);
-
-                ui.separator();
+            .show(ctx, |ui| {
+                self.input_all(ui);
             });
 
         egui::CentralPanel::default().show(ctx, |ui| {
@@ -121,7 +92,7 @@ impl eframe::App for Plotter {
                 .size(Size::remainder())
                 .vertical(|mut strip| {
                     strip.cell(|ui| {
-                        self.plot(ui);
+                        self.plot_all(ui);
                     });
                 });
         });
@@ -161,66 +132,56 @@ impl Plotter {
         ui.menu_button("Add", |ui| {
             ui.menu_button("Plot 2d", |ui| {
                 if ui.button("Function").clicked() {
-                    self.plot_type = PlotType::Function2d;
-                    self.are_data_computed = false;
+                    self.plots.push(PlotItem::default_function());
                     ui.close_menu();
                 }
 
                 if ui.button("Parametric").clicked() {
-                    self.plot_type = PlotType::Parametric2d;
-                    self.are_data_computed = false;
+                    self.plots.push(PlotItem::default_parametric());
                     ui.close_menu();
                 }
 
                 if ui.button("Polar").clicked() {
-                    self.plot_type = PlotType::Polar2d;
-                    self.are_data_computed = false;
+                    self.plots.push(PlotItem::default_polar());
                     ui.close_menu();
                 }
 
                 if ui.button("Equation").clicked() {
-                    self.plot_type = PlotType::Equation2d;
-                    self.are_data_computed = false;
+                    //TODO
                     ui.close_menu();
                 }
 
                 if ui.button("High plot").clicked() {
-                    self.plot_type = PlotType::High2d;
-                    self.are_data_computed = false;
+                    //TODO
                     ui.close_menu();
                 }
             });
 
             ui.menu_button("Data 2d", |ui| {
                 if ui.button("Scatter").clicked() {
-                    self.plot_type = PlotType::Scatter2d;
-                    self.are_data_computed = false;
+                    //TODO
                     ui.close_menu();
                 }
 
                 if ui.button("Linear").clicked() {
-                    self.plot_type = PlotType::Linear2d;
-                    self.are_data_computed = false;
+                    //TODO
                     ui.close_menu();
                 }
 
                 if ui.button("Histogram").clicked() {
-                    self.plot_type = PlotType::Histogram2d;
-                    self.are_data_computed = false;
+                    //TODO
                     ui.close_menu();
                 }
             });
 
             ui.menu_button("Plot 3d", |ui| {
                 if ui.button("Parametric").clicked() {
-                    self.plot_type = PlotType::Parametric3d;
-                    self.are_data_computed = false;
+                    //TODO
                     ui.close_menu();
                 }
 
                 if ui.button("Equation").clicked() {
-                    self.plot_type = PlotType::Equation3d;
-                    self.are_data_computed = false;
+                    //TODO
                     ui.close_menu();
                 }
             });
