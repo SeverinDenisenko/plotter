@@ -32,7 +32,7 @@ impl crate::Plotter {
         for j in 0..self.plots.len() {
             lines.push(
                 Line::new(
-                    (0..self.plots[j].intervals_amount).map(
+                    (0..self.plots[j].n + 1).map(
                         |i| {
                             self.plots[j].points[i as usize]
                         }

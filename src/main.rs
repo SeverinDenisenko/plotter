@@ -40,7 +40,6 @@ fn main() {
 
 struct Plotter {
     // Plotting
-    number_of_plots: usize,
     plots: Vec<PlotItem>,
     plot_provider: PlotProvider,
 
@@ -53,7 +52,6 @@ struct Plotter {
 impl Default for Plotter {
     fn default() -> Self {
         Self {
-            number_of_plots: 1,
             plots: vec![PlotItem::default_function()],
             plot_provider: PlotProvider::Egui,
 
@@ -68,6 +66,8 @@ impl eframe::App for Plotter {
         egui::TopBottomPanel::top("context_menu")
             .resizable(false)
             .show(ctx, |ui| {
+                ui.add_space(1.0);
+
                 ui.horizontal(|ui| {
                     Plotter::global_dark_light_mode_switch(ui);
 
@@ -76,6 +76,7 @@ impl eframe::App for Plotter {
                     self.plotter_context_menu(ui);
                     self.export_context_menu(ui);
                 });
+
             });
 
         egui::SidePanel::left("left_panel")

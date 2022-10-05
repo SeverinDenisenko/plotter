@@ -20,22 +20,22 @@ impl crate::Plotter {
     }
 
     pub fn parse_equal_grid(&mut self, plot_number: usize) {
-        self.plots[plot_number].intervals_amount = Self::evaluate_string(self.plots[plot_number].intervals_amount_s.to_owned()) as u32;
+        self.plots[plot_number].n = Self::evaluate_string(self.plots[plot_number].n_s.to_owned()) as u32;
 
-        self.plots[plot_number].lower_limit = Self::evaluate_string(self.plots[plot_number].lower_limit_s.to_owned());
-        self.plots[plot_number].higher_limit = Self::evaluate_string(self.plots[plot_number].higher_limit_s.to_owned());
+        self.plots[plot_number].a = Self::evaluate_string(self.plots[plot_number].a_s.to_owned());
+        self.plots[plot_number].b = Self::evaluate_string(self.plots[plot_number].b_s.to_owned());
     }
 
     pub fn compute_function_equal_grid(&mut self, plot_number: usize) {
         if !self.plots[plot_number].are_data_computed {
             self.parse_equal_grid(plot_number);
-            let f = Self::get_parsed_function(self.plots[plot_number].input_function.to_owned(), "x".to_owned());
+            let f = Self::get_parsed_function(self.plots[plot_number].function.to_owned(), "x".to_owned());
 
             self.plots[plot_number].points.clear();
 
-            let n = self.plots[plot_number].intervals_amount;
-            let a = self.plots[plot_number].lower_limit;
-            let b = self.plots[plot_number].higher_limit;
+            let n = self.plots[plot_number].n;
+            let a = self.plots[plot_number].a;
+            let b = self.plots[plot_number].b;
 
             for i in 0..n + 1 {
                 let x = a + i as f64 * (b - a) / n as f64;
@@ -51,14 +51,14 @@ impl crate::Plotter {
         if !self.plots[plot_number].are_data_computed {
             self.parse_equal_grid(plot_number);
 
-            let x = Self::get_parsed_function(self.plots[plot_number].input_function.to_owned(), "t".to_owned());
-            let y = Self::get_parsed_function(self.plots[plot_number].input_parameter.to_owned(), "t".to_owned());
+            let x = Self::get_parsed_function(self.plots[plot_number].function.to_owned(), "t".to_owned());
+            let y = Self::get_parsed_function(self.plots[plot_number].parameter.to_owned(), "t".to_owned());
 
             self.plots[plot_number].points.clear();
 
-            let n = self.plots[plot_number].intervals_amount;
-            let a = self.plots[plot_number].lower_limit;
-            let b = self.plots[plot_number].higher_limit;
+            let n = self.plots[plot_number].n;
+            let a = self.plots[plot_number].a;
+            let b = self.plots[plot_number].b;
 
             for i in 0..n + 1 {
                 let t = a + i as f64 * (b - a) / n as f64;
@@ -74,13 +74,13 @@ impl crate::Plotter {
         if !self.plots[plot_number].are_data_computed {
             self.parse_equal_grid(plot_number);
 
-            let r = Self::get_parsed_function(self.plots[plot_number].input_function.to_owned(), "a".to_owned());
+            let r = Self::get_parsed_function(self.plots[plot_number].function.to_owned(), "a".to_owned());
 
             self.plots[plot_number].points.clear();
 
-            let n = self.plots[plot_number].intervals_amount;
-            let a = self.plots[plot_number].lower_limit;
-            let b = self.plots[plot_number].higher_limit;
+            let n = self.plots[plot_number].n;
+            let a = self.plots[plot_number].a;
+            let b = self.plots[plot_number].b;
 
             for i in 0..n + 1 {
                 let t = a + i as f64 * (b - a) / n as f64;

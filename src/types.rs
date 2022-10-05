@@ -18,17 +18,17 @@ pub enum PlotProvider {
 }
 
 pub struct PlotItem {
-    pub input_function: String,
-    pub input_parameter: String,
+    pub function: String,
+    pub parameter: String,
     // May be empty for non-parametric inputs
-    pub lower_limit_s: String,
-    pub higher_limit_s: String,
-    pub intervals_amount_s: String,
+    pub a_s: String,
+    pub b_s: String,
+    pub n_s: String,
 
     pub plot_type: PlotType,
-    pub lower_limit: f64,
-    pub higher_limit: f64,
-    pub intervals_amount: u32,
+    pub a: f64,
+    pub b: f64,
+    pub n: u32,
     pub points: Vec<[f64; 2]>,
     pub are_data_computed: bool,
 }
@@ -36,16 +36,16 @@ pub struct PlotItem {
 impl PlotItem {
     pub fn default_function() -> PlotItem {
         PlotItem {
-            input_function: "exp(x)".to_owned(),
-            input_parameter: "".to_owned(), // May be empty for non-parametric inputs
-            lower_limit_s: "-1".to_owned(),
-            higher_limit_s: "1".to_owned(),
-            intervals_amount_s: "100".to_owned(),
+            function: "exp(x)".to_owned(),
+            parameter: "".to_owned(), // May be empty for non-parametric inputs
+            a_s: "-1".to_owned(),
+            b_s: "1".to_owned(),
+            n_s: "100".to_owned(),
 
             plot_type: PlotType::Function2d,
-            lower_limit: -1.0,
-            higher_limit: 1.0,
-            intervals_amount: 100,
+            a: -1.0,
+            b: 1.0,
+            n: 100,
             points: vec![],
             are_data_computed: false,
         }
@@ -53,16 +53,16 @@ impl PlotItem {
 
     pub fn default_polar() -> PlotItem {
         PlotItem {
-            input_function: "cos(a * 3)".to_owned(),
-            input_parameter: "".to_owned(), // May be empty for non-parametric inputs
-            lower_limit_s: "0".to_owned(),
-            higher_limit_s: "pi * 2".to_owned(),
-            intervals_amount_s: "100".to_owned(),
+            function: "cos(a * 3)".to_owned(),
+            parameter: "".to_owned(), // May be empty for non-parametric inputs
+            a_s: "0".to_owned(),
+            b_s: "pi * 2".to_owned(),
+            n_s: "100".to_owned(),
 
             plot_type: PlotType::Polar2d,
-            lower_limit: 0.0,
-            higher_limit: std::f64::consts::PI * 2.0,
-            intervals_amount: 100,
+            a: 0.0,
+            b: std::f64::consts::PI * 2.0,
+            n: 100,
             points: vec![],
             are_data_computed: false,
         }
@@ -70,16 +70,16 @@ impl PlotItem {
 
     pub fn default_parametric() -> PlotItem {
         PlotItem {
-            input_function: "sin(t)".to_owned(),
-            input_parameter: "cos(t)".to_owned(), // May be empty for non-parametric inputs
-            lower_limit_s: "0".to_owned(),
-            higher_limit_s: "pi * 2".to_owned(),
-            intervals_amount_s: "100".to_owned(),
+            function: "sin(t)".to_owned(),
+            parameter: "cos(t)".to_owned(), // May be empty for non-parametric inputs
+            a_s: "0".to_owned(),
+            b_s: "pi * 2".to_owned(),
+            n_s: "100".to_owned(),
 
             plot_type: PlotType::Parametric2d,
-            lower_limit: 0.0,
-            higher_limit: std::f64::consts::PI * 2.0,
-            intervals_amount: 100,
+            a: 0.0,
+            b: std::f64::consts::PI * 2.0,
+            n: 100,
             points: vec![],
             are_data_computed: false,
         }
