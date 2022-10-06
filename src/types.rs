@@ -1,5 +1,6 @@
 use rand;
 
+#[derive(PartialEq)]
 pub enum PlotType {
     Function2d,
     Parametric2d,
@@ -100,6 +101,28 @@ impl PlotItem {
             points: vec![],
             are_data_computed: false,
             
+            has_an_error: false,
+            error_message: "".to_owned(),
+
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
+        }
+    }
+
+    pub fn default_scatter() -> PlotItem {
+        PlotItem {
+            function: "".to_owned(),
+            parameter: "".to_owned(), // May be empty for non-parametric inputs
+            a_s: "".to_owned(),
+            b_s: "".to_owned(),
+            n_s: "".to_owned(),
+
+            plot_type: PlotType::Scatter2d,
+            a: 0.0,
+            b: 0.0,
+            n: 0,
+            points: vec![],
+            are_data_computed: false,
+
             has_an_error: false,
             error_message: "".to_owned(),
 
