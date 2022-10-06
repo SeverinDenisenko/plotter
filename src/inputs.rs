@@ -1,4 +1,4 @@
-use egui::{ScrollArea, TextStyle};
+use egui::{Color32, RichText, ScrollArea, TextStyle};
 use crate::types::*;
 
 impl crate::Plotter {
@@ -39,6 +39,12 @@ impl crate::Plotter {
                     }
 
                     ui.add_space(3.0);
+
+                    if self.plots[i].has_an_error {
+                        ui.horizontal(|ui| {
+                            ui.label(RichText::new("Error!").color(Color32::RED));
+                        });
+                    }
 
                     ui.horizontal(|ui| {
                         if ui.button("Remove").clicked() && self.plots.len() != 1 {

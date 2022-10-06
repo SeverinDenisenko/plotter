@@ -33,7 +33,9 @@ pub struct PlotItem {
     pub n: u32,
     pub points: Vec<[f64; 2]>,
     pub are_data_computed: bool,
+    
     pub has_an_error: bool,
+    pub error_message: String,
 
     pub color: [f32; 3],
 }
@@ -42,7 +44,7 @@ impl PlotItem {
     pub fn default_function() -> PlotItem {
         PlotItem {
             function: "exp(x)".to_owned(),
-            parameter: "".to_owned(), // May be empty for non-parametric inputs
+            parameter: "".to_owned(), // Empty for non-parametric inputs
             a_s: "-1".to_owned(),
             b_s: "1".to_owned(),
             n_s: "100".to_owned(),
@@ -53,7 +55,9 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+            
             has_an_error: false,
+            error_message: "".to_owned(),
 
             color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }
@@ -73,7 +77,9 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+            
             has_an_error: false,
+            error_message: "".to_owned(),
 
             color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }
@@ -93,7 +99,9 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+            
             has_an_error: false,
+            error_message: "".to_owned(),
 
             color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }
