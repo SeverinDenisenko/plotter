@@ -33,6 +33,7 @@ pub struct PlotItem {
     pub n: u32,
     pub points: Vec<[f64; 2]>,
     pub are_data_computed: bool,
+    pub has_an_error: bool,
 
     pub color: [f32; 3],
 }
@@ -52,6 +53,7 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+            has_an_error: false,
 
             color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }
@@ -71,6 +73,7 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+            has_an_error: false,
 
             color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }
@@ -90,6 +93,7 @@ impl PlotItem {
             n: 100,
             points: vec![],
             are_data_computed: false,
+            has_an_error: false,
 
             color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
         }

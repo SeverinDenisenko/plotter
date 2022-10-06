@@ -61,30 +61,14 @@ impl crate::Plotter {
     }
 
     fn input_function2d(&mut self, ui: &mut egui::Ui, plot_number: usize) {
-        ui.horizontal(|ui| {
-            ui.label("y(x): ");
-            if ui.text_edit_singleline(&mut self.plots[plot_number].function).changed() {
-                self.plots[plot_number].are_data_computed = false;
-            }
-        });
+        self.plots[plot_number].function = self.input_filed_string(ui, "y(x): ".to_string(), self.plots[plot_number].function.to_owned(), plot_number);
 
         self.input_uniform_grid(ui, plot_number);
     }
 
     fn input_parametric2d(&mut self, ui: &mut egui::Ui, plot_number: usize) {
-        ui.horizontal(|ui| {
-            ui.label("x(t): ");
-            if ui.text_edit_singleline(&mut self.plots[plot_number].function).changed() {
-                self.plots[plot_number].are_data_computed = false;
-            }
-        });
-
-        ui.horizontal(|ui| {
-            ui.label("y(t): ");
-            if ui.text_edit_singleline(&mut self.plots[plot_number].parameter).changed() {
-                self.plots[plot_number].are_data_computed = false;
-            }
-        });
+        self.plots[plot_number].function = self.input_filed_string(ui, "x(t): ".to_string(), self.plots[plot_number].function.to_owned(), plot_number);
+        self.plots[plot_number].parameter = self.input_filed_string(ui, "y(t): ".to_string(), self.plots[plot_number].parameter.to_owned(), plot_number);
 
         self.input_uniform_grid(ui, plot_number);
     }

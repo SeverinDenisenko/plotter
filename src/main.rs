@@ -84,6 +84,7 @@ impl eframe::App for Plotter {
         egui::SidePanel::left("left_panel")
             .resizable(true)
             .show(ctx, |ui| {
+                ui.add_space(3.0);
                 self.input_all(ui);
             });
 
