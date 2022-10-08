@@ -61,7 +61,12 @@ impl crate::Plotter {
 
                             egui::Ui::color_edit_button_rgb(ui, &mut self.plots[i].color);
 
-                            egui::ComboBox::from_id_source(i).selected_text("Style")
+                            let cmb_text = match self.plots[i].plot_style {
+                                PlotStyle::Lines => "Lines",
+                                PlotStyle::Points => "Points"
+                            };
+
+                            egui::ComboBox::from_id_source(i).selected_text(cmb_text)
                                 .show_ui(ui, |ui| {
                                     ui.selectable_value(&mut self.plots[i].plot_style, PlotStyle::Lines, "Lines");
                                     ui.selectable_value(&mut self.plots[i].plot_style, PlotStyle::Points, "Points");
