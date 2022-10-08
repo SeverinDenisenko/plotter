@@ -31,26 +31,9 @@ impl crate::Plotter {
         let mut lines: Vec<Line> = vec![];
 
         for j in 0..self.plots.len() {
-            if (self.plots[j].plot_type == Scatter2d || self.plots[j].plot_type == Linear2d) &&  self.plots[j].n == 0{
-                continue;
-            };
-            if (self.plots[j].plot_type == Scatter2d || self.plots[j].plot_type == Linear2d) &&  self.plots[j].n != 0{
-                lines.push(
-                    Line::new(
-                        (0..self.plots[j].n).map(
-                            |i| {
-                                self.plots[j].points[i as usize]
-                            }
-                        ).collect::<PlotPoints>()
-                    ).color(Color32::from(Rgba::from_rgb(self.plots[j].color[0],
-                                                         self.plots[j].color[1],
-                                                         self.plots[j].color[2])))
-                );
-                continue;
-            };
             lines.push(
                 Line::new(
-                    (0..self.plots[j].n + 1).map(
+                    (0..self.plots[j].points.len()).map(
                         |i| {
                             self.plots[j].points[i as usize]
                         }

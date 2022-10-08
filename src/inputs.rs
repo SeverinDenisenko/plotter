@@ -29,17 +29,17 @@ impl crate::Plotter {
                             // 2D
                             PlotType::Function2d => {
                                 self.input_function2d(ui, i);
-                            },
+                            }
                             PlotType::Parametric2d => {
                                 self.input_parametric2d(ui, i);
-                            },
+                            }
                             PlotType::Polar2d => {
                                 self.input_polar2d(ui, i);
-                            },
+                            }
                             // Data
                             PlotType::Linear2d => {
                                 self.input_linear_2d(ui, i);
-                            },
+                            }
                             _ => {} // TODO
                         }
 
@@ -96,75 +96,82 @@ impl crate::Plotter {
 
     fn input_linear_2d(&mut self, ui: &mut egui::Ui, plot_number: usize) {
         if ui.button("Open").clicked() {
-            let file = FileDialog::new().pick_file();
-
-            match file {
-                Some(path_buff) => {
-                    match File::open(path_buff.as_path()) {
-                        Ok(file) => {
-                            let lines: Vec<String> = BufReader::new(file).lines().map(|l| {
-                                match l {
-                                    Ok(str) => str,
-                                    Err(err) => {
-                                        self.plots[plot_number].has_an_error = true;
-                                        self.plots[plot_number].error_message = err.to_string();
-                                        "".to_owned()
-                                    }
-                                }
-                            }).collect();
-
-                            self.plots[plot_number].name = path_buff.as_path().file_name().expect("Can't find filename").to_str().expect("Can't find filename").to_string();
-
-                            self.plots[plot_number].n = 0;
-
-
-                            for line in lines {
-                                let nums: Vec<&str> = line.split(" ").collect();
-                                if nums.len() != 2 {
-                                    continue;
-                                }
-
-                                let a_s = nums[0];
-                                let b_s = nums[1];
-
-                                let a = match meval::eval_str(a_s) {
-                                    Ok(num) => num,
-                                    Err(err) => {
-                                        self.plots[plot_number].has_an_error = true;
-                                        self.plots[plot_number].error_message = err.to_string();
-                                        continue;
-                                    }
-                                };
-
-                                let b = match meval::eval_str(b_s) {
-                                    Ok(num) => num,
-                                    Err(err) => {
-                                        self.plots[plot_number].has_an_error = true;
-                                        self.plots[plot_number].error_message = err.to_string();
-                                        continue;
-                                    }
-                                };
-
-                                self.plots[plot_number].points.push([a, b]);
-                                self.plots[plot_number].n += 1;
-                            }
-
-                            self.plots[plot_number].are_data_computed = true;
-                        }
-                        Err(err) => {
-                            self.plots[plot_number].has_an_error = true;
-                            self.plots[plot_number].error_message = err.to_string();
-                        }
-                    };
-                }
-                None => {}
-            };
+            self.load_data(plot_number);
         }
 
         ui.label(RichText::new(self.plots[plot_number].name.to_owned()).color(Color32::BROWN));
     }
 
     //////// Common patterns ////////
+
+    fn load_data(&mut self, plot_number: usize) {
+        let path_o = FileDialog::new().pick_file();
+
+        let path = match path_o {
+            Some(f) => f,
+            None => {
+                return;
+            }
+        };
+
+        let file = match File::open(path.as_path()) {
+            Ok(f) => f,
+            Err(err) => {
+                self.plots[plot_number].has_an_error = true;
+                self.plots[plot_number].error_message = err.to_string();
+                return;
+            }
+        };
+
+        let lines: Vec<String> = BufReader::new(file).lines().map(|l| {
+            match l {
+                Ok(str) => str,
+                Err(err) => {
+                    self.plots[plot_number].has_an_error = true;
+                    self.plots[plot_number].error_message = err.to_string();
+                    "".to_owned()
+                }
+            }
+        }).collect();
+
+        self.plots[plot_number].name = path.as_path().file_name().unwrap().to_str().unwrap().to_string();
+
+        self.plots[plot_number].n = 0;
+        self.plots[plot_number].points.clear();
+
+        for line in lines {
+            let nums: Vec<&str> = line.split(" ").collect();
+            if nums.len() != 2 {
+                continue;
+            }
+
+            let a_s = nums[0];
+            let b_s = nums[1];
+
+            let a = match meval::eval_str(a_s) {
+                Ok(num) => num,
+                Err(err) => {
+                    self.plots[plot_number].has_an_error = true;
+                    self.plots[plot_number].error_message = err.to_string();
+                    continue;
+                }
+            };
+
+            let b = match meval::eval_str(b_s) {
+                Ok(num) => num,
+                Err(err) => {
+                    self.plots[plot_number].has_an_error = true;
+                    self.plots[plot_number].error_message = err.to_string();
+                    continue;
+                }
+            };
+
+            self.plots[plot_number].points.push([a, b]);
+            self.plots[plot_number].n += 1;
+        }
+
+        self.plots[plot_number].are_data_computed = true;
+    }
 
     fn input_uniform_grid(&mut self, ui: &mut egui::Ui, plot_number: usize) {
         self.plots[plot_number].a_s = self.input_filed_string(ui, "a: ".to_string(), self.plots[plot_number].a_s.to_owned(), plot_number);
