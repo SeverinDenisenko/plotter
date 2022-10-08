@@ -39,6 +39,9 @@ impl crate::Plotter {
                             // Data
                             PlotType::PointsXY2d => {
                                 self.input_linear_2d(ui, i);
+                            },
+                            PlotType::PointsY2d => {
+                                self.input_linear_2d(ui, i);
                             }
                             _ => {} // TODO
                         }
@@ -47,7 +50,7 @@ impl crate::Plotter {
 
                         if self.plots[i].has_an_error {
                             ui.horizontal(|ui| {
-                                ui.label(RichText::new("Error!".to_string() + self.plots[i].error_message.to_owned().as_str()).color(Color32::RED));
+                                ui.label(RichText::new(self.plots[i].error_message.to_owned()).color(Color32::RED));
                             });
                         }
 
@@ -58,7 +61,7 @@ impl crate::Plotter {
 
                             egui::Ui::color_edit_button_rgb(ui, &mut self.plots[i].color);
 
-                            egui::ComboBox::from_label("").selected_text("Style")
+                            egui::ComboBox::from_id_source(i).selected_text("Style")
                                 .show_ui(ui, |ui| {
                                     ui.selectable_value(&mut self.plots[i].plot_style, PlotStyle::Lines, "Lines");
                                     ui.selectable_value(&mut self.plots[i].plot_style, PlotStyle::Points, "Points");
@@ -103,7 +106,18 @@ impl crate::Plotter {
 
     fn input_linear_2d(&mut self, ui: &mut egui::Ui, plot_number: usize) {
         if ui.button("Open").clicked() {
-            self.load_data(plot_number);
+            match self.plots[plot_number].plot_type {
+                PlotType::PointsXY2d => {
+                    self.load_data_x_y(plot_number);
+                },
+                PlotType::PointsY2d => {
+                    self.load_data_y(plot_number);
+                },
+                _ => {
+                    //TODO
+                }
+            }
+
         }
 
         ui.label(RichText::new(self.plots[plot_number].name.to_owned()).color(Color32::BROWN));
@@ -111,7 +125,7 @@ impl crate::Plotter {
 
     //////// Common patterns ////////
 
-    fn load_data(&mut self, plot_number: usize) {
+    fn load_data_x_y(&mut self, plot_number: usize) {
         let path_o = FileDialog::new().pick_file();
 
         let path = match path_o {
@@ -174,6 +188,62 @@ impl crate::Plotter {
             };
 
             self.plots[plot_number].points.push([a, b]);
+            self.plots[plot_number].n += 1;
+        }
+
+        self.plots[plot_number].are_data_computed = true;
+    }
+
+    fn load_data_y(&mut self, plot_number: usize) {
+        let path_o = FileDialog::new().pick_file();
+
+        let path = match path_o {
+            Some(f) => f,
+            None => {
+                return;
+            }
+        };
+
+        let file = match File::open(path.as_path()) {
+            Ok(f) => f,
+            Err(err) => {
+                self.plots[plot_number].has_an_error = true;
+                self.plots[plot_number].error_message = err.to_string();
+                return;
+            }
+        };
+
+        let lines: Vec<String> = BufReader::new(file).lines().map(|l| {
+            match l {
+                Ok(str) => str,
+                Err(err) => {
+                    self.plots[plot_number].has_an_error = true;
+                    self.plots[plot_number].error_message = err.to_string();
+                    "".to_owned()
+                }
+            }
+        }).collect();
+
+        self.plots[plot_number].name = path.as_path().file_name().unwrap().to_str().unwrap().to_string();
+
+        self.plots[plot_number].n = 0;
+        self.plots[plot_number].points.clear();
+
+        for line in lines {
+
+            let y_s = line;
+
+            let y = match meval::eval_str(y_s) {
+                Ok(num) => num,
+                Err(err) => {
+                    self.plots[plot_number].has_an_error = true;
+                    self.plots[plot_number].error_message = err.to_string();
+                    continue;
+                }
+            };
+
+            let x = self.plots[plot_number].n as f64;
+            self.plots[plot_number].points.push([x, y]);
             self.plots[plot_number].n += 1;
         }
 

@@ -168,7 +168,7 @@ impl Plotter {
                 }
 
                 if ui.button("Points - Y").clicked() {
-                    //TODO
+                    self.plots.push(PlotItem::default_points_y_2d());
                     ui.close_menu();
                 }
             });

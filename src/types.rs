@@ -153,4 +153,31 @@ impl PlotItem {
             plot_style: Lines,
         }
     }
+
+    pub fn default_points_y_2d() -> PlotItem {
+        PlotItem {
+            function: "".to_owned(),
+            parameter: "".to_owned(), // May be empty for non-parametric inputs
+            a_s: "".to_owned(),
+            b_s: "".to_owned(),
+            n_s: "".to_owned(),
+
+            plot_type: PlotType::PointsY2d,
+            a: 0.0,
+            b: 0.0,
+            n: 0,
+            points: vec![],
+            are_data_computed: false,
+
+            // Only for data's plot type
+            name: "".to_owned(),
+
+            has_an_error: false,
+            error_message: "".to_owned(),
+
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()],
+            plot_style: Lines,
+        }
+    }
+
 }
