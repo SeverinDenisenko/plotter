@@ -1,11 +1,13 @@
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 use egui::{Color32, RichText, ScrollArea, TextStyle};
 use crate::types::*;
+use rfd::FileDialog;
 
 impl crate::Plotter {
     //////// Input forms for different plot types ////////
 
     pub fn input_all(&mut self, ui: &mut egui::Ui) {
-
         let mut plots_to_remove: Vec<usize> = vec![];
 
         ui.add_space(4.0);
@@ -18,46 +20,49 @@ impl crate::Plotter {
         ScrollArea::vertical()
             .auto_shrink([false; 2]).stick_to_bottom(false)
             .show_rows(
-            ui,
-            row_height,
-            num_rows,
-            |ui, row| {
-
-                for i in row {
-                    match self.plots[i].plot_type {
-                        // 2D
-                        PlotType::Function2d => {
-                            self.input_function2d(ui, i);
-                        },
-                        PlotType::Parametric2d => {
-                            self.input_parametric2d(ui, i);
-                        },
-                        PlotType::Polar2d => {
-                            self.input_polar2d(ui, i);
+                ui,
+                row_height,
+                num_rows,
+                |ui, row| {
+                    for i in row {
+                        match self.plots[i].plot_type {
+                            // 2D
+                            PlotType::Function2d => {
+                                self.input_function2d(ui, i);
+                            },
+                            PlotType::Parametric2d => {
+                                self.input_parametric2d(ui, i);
+                            },
+                            PlotType::Polar2d => {
+                                self.input_polar2d(ui, i);
+                            },
+                            // Data
+                            PlotType::Linear2d => {
+                                self.input_linear_2d(ui, i);
+                            },
+                            _ => {} // TODO
                         }
-                        _ => {}, // TODO
-                    }
 
-                    ui.add_space(3.0);
+                        ui.add_space(3.0);
 
-                    if self.plots[i].has_an_error {
+                        if self.plots[i].has_an_error {
+                            ui.horizontal(|ui| {
+                                ui.label(RichText::new("Error!".to_string() + self.plots[i].error_message.to_owned().as_str()).color(Color32::RED));
+                            });
+                        }
+
                         ui.horizontal(|ui| {
-                            ui.label(RichText::new("Error!").color(Color32::RED));
+                            if ui.button("Remove").clicked() && self.plots.len() != 1 {
+                                plots_to_remove.push(i);
+                            }
+
+                            egui::Ui::color_edit_button_rgb(ui, &mut self.plots[i].color);
                         });
+
+                        ui.separator();
                     }
-
-                    ui.horizontal(|ui| {
-                        if ui.button("Remove").clicked() && self.plots.len() != 1 {
-                            plots_to_remove.push(i);
-                        }
-
-                        egui::Ui::color_edit_button_rgb(ui, &mut self.plots[i].color);
-                    });
-
-                    ui.separator();
-                }
-            },
-        );
+                },
+            );
 
         ui.add_space(4.0);
 
@@ -65,6 +70,8 @@ impl crate::Plotter {
             self.plots.remove(i);
         }
     }
+
+    // Input 2d
 
     fn input_function2d(&mut self, ui: &mut egui::Ui, plot_number: usize) {
         self.plots[plot_number].function = self.input_filed_string(ui, "y(x): ".to_string(), self.plots[plot_number].function.to_owned(), plot_number);
@@ -83,6 +90,78 @@ impl crate::Plotter {
         self.plots[plot_number].function = self.input_filed_string(ui, "r(a): ".to_string(), self.plots[plot_number].function.to_owned(), plot_number);
 
         self.input_uniform_grid(ui, plot_number);
+    }
+
+    // Input data
+
+    fn input_linear_2d(&mut self, ui: &mut egui::Ui, plot_number: usize) {
+        if ui.button("Open").clicked() {
+            let file = FileDialog::new().pick_file();
+
+            match file {
+                Some(path_buff) => {
+                    match File::open(path_buff.as_path()) {
+                        Ok(file) => {
+                            let lines: Vec<String> = BufReader::new(file).lines().map(|l| {
+                                match l {
+                                    Ok(str) => str,
+                                    Err(err) => {
+                                        self.plots[plot_number].has_an_error = true;
+                                        self.plots[plot_number].error_message = err.to_string();
+                                        "".to_owned()
+                                    }
+                                }
+                            }).collect();
+
+                            self.plots[plot_number].name = path_buff.as_path().file_name().expect("Can't find filename").to_str().expect("Can't find filename").to_string();
+
+                            self.plots[plot_number].n = 0;
+
+
+                            for line in lines {
+                                let nums: Vec<&str> = line.split(" ").collect();
+                                if nums.len() != 2 {
+                                    continue;
+                                }
+
+                                let a_s = nums[0];
+                                let b_s = nums[1];
+
+                                let a = match meval::eval_str(a_s) {
+                                    Ok(num) => num,
+                                    Err(err) => {
+                                        self.plots[plot_number].has_an_error = true;
+                                        self.plots[plot_number].error_message = err.to_string();
+                                        continue;
+                                    }
+                                };
+
+                                let b = match meval::eval_str(b_s) {
+                                    Ok(num) => num,
+                                    Err(err) => {
+                                        self.plots[plot_number].has_an_error = true;
+                                        self.plots[plot_number].error_message = err.to_string();
+                                        continue;
+                                    }
+                                };
+
+                                self.plots[plot_number].points.push([a, b]);
+                                self.plots[plot_number].n += 1;
+                            }
+
+                            self.plots[plot_number].are_data_computed = true;
+                        }
+                        Err(err) => {
+                            self.plots[plot_number].has_an_error = true;
+                            self.plots[plot_number].error_message = err.to_string();
+                        }
+                    };
+                }
+                None => {}
+            };
+        }
+
+        ui.label(RichText::new(self.plots[plot_number].name.to_owned()).color(Color32::BROWN));
     }
 
     //////// Common patterns ////////

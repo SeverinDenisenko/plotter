@@ -163,12 +163,12 @@ impl Plotter {
 
             ui.menu_button("Data 2d", |ui| {
                 if ui.button("Scatter").clicked() {
-                    self.plots.push(PlotItem::default_scatter());
+                    //TODO
                     ui.close_menu();
                 }
 
                 if ui.button("Linear").clicked() {
-                    //TODO
+                    self.plots.push(PlotItem::default_linear_2d());
                     ui.close_menu();
                 }
 
