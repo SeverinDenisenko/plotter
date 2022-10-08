@@ -1,17 +1,22 @@
 use rand;
+use crate::PlotStyle::Lines;
 
 #[derive(PartialEq)]
 pub enum PlotType {
     Function2d,
     Parametric2d,
     Polar2d,
-    Equation2d,
     High2d,
-    Scatter2d,
-    Linear2d,
-    Histogram2d,
+    PointsXY2d,
+    PointsY2d,
     Parametric3d,
     Equation3d,
+}
+
+#[derive(PartialEq)]
+pub enum PlotStyle {
+    Lines,
+    Points,
 }
 
 pub enum PlotProvider {
@@ -41,6 +46,7 @@ pub struct PlotItem {
     pub error_message: String,
 
     pub color: [f32; 3],
+    pub plot_style: PlotStyle,
 }
 
 impl PlotItem {
@@ -65,7 +71,8 @@ impl PlotItem {
             has_an_error: false,
             error_message: "".to_owned(),
 
-            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()],
+            plot_style: Lines,
         }
     }
 
@@ -90,7 +97,8 @@ impl PlotItem {
             has_an_error: false,
             error_message: "".to_owned(),
 
-            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()],
+            plot_style: Lines,
         }
     }
 
@@ -115,11 +123,12 @@ impl PlotItem {
             has_an_error: false,
             error_message: "".to_owned(),
 
-            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()],
+            plot_style: Lines,
         }
     }
 
-    pub fn default_linear_2d() -> PlotItem {
+    pub fn default_points_x_y_2d() -> PlotItem {
         PlotItem {
             function: "".to_owned(),
             parameter: "".to_owned(), // May be empty for non-parametric inputs
@@ -127,7 +136,7 @@ impl PlotItem {
             b_s: "".to_owned(),
             n_s: "".to_owned(),
 
-            plot_type: PlotType::Linear2d,
+            plot_type: PlotType::PointsXY2d,
             a: 0.0,
             b: 0.0,
             n: 0,
@@ -140,7 +149,8 @@ impl PlotItem {
             has_an_error: false,
             error_message: "".to_owned(),
 
-            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()]
+            color: [rand::random::<f32>(), rand::random::<f32>(), rand::random::<f32>()],
+            plot_style: Lines,
         }
     }
 }

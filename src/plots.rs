@@ -1,6 +1,5 @@
-use egui::plot::{Line, Plot, PlotPoints};
+use egui::plot::{Line, Plot, PlotPoints, Points};
 use egui::{Color32, Rgba};
-use crate::PlotType::{Linear2d, Scatter2d};
 
 use crate::types::*;
 
@@ -29,19 +28,33 @@ impl crate::Plotter {
         self.compute_all();
 
         let mut lines: Vec<Line> = vec![];
+        let mut points: Vec<Points> = vec![];
 
         for j in 0..self.plots.len() {
-            lines.push(
-                Line::new(
-                    (0..self.plots[j].points.len()).map(
+            if self.plots[j].plot_style == PlotStyle::Lines {
+                lines.push(
+                    Line::new(
+                        (0..self.plots[j].points.len()).map(
+                            |i| {
+                                self.plots[j].points[i as usize]
+                            }
+                        ).collect::<PlotPoints>()
+                    ).color(Color32::from(Rgba::from_rgb(self.plots[j].color[0],
+                                                         self.plots[j].color[1],
+                                                         self.plots[j].color[2])))
+                )
+            }
+            if self.plots[j].plot_style == PlotStyle::Points {
+                points.push(
+                    Points::new((0..self.plots[j].points.len()).map(
                         |i| {
                             self.plots[j].points[i as usize]
                         }
-                    ).collect::<PlotPoints>()
-                ).color(Color32::from(Rgba::from_rgb(self.plots[j].color[0],
-                                                     self.plots[j].color[1],
-                                                     self.plots[j].color[2])))
-            )
+                    ).collect::<PlotPoints>()).color(Color32::from(Rgba::from_rgb(self.plots[j].color[0],
+                                                                                  self.plots[j].color[1],
+                                                                                  self.plots[j].color[2])))
+                )
+            }
         }
 
         Plot::new("Plot")
@@ -49,6 +62,9 @@ impl crate::Plotter {
             .show(ui, |plot_ui| {
                 for line in lines {
                     plot_ui.line(line)
+                }
+                for point in points {
+                    plot_ui.points(point)
                 }
             });
     }

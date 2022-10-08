@@ -161,18 +161,13 @@ impl Plotter {
                 }
             });
 
-            ui.menu_button("Data 2d", |ui| {
-                if ui.button("Scatter").clicked() {
-                    //TODO
+            ui.menu_button("Data", |ui| {
+                if ui.button("Points X Y").clicked() {
+                    self.plots.push(PlotItem::default_points_x_y_2d());
                     ui.close_menu();
                 }
 
-                if ui.button("Linear").clicked() {
-                    self.plots.push(PlotItem::default_linear_2d());
-                    ui.close_menu();
-                }
-
-                if ui.button("Histogram").clicked() {
+                if ui.button("Points - Y").clicked() {
                     //TODO
                     ui.close_menu();
                 }

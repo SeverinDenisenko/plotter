@@ -37,7 +37,7 @@ impl crate::Plotter {
                                 self.input_polar2d(ui, i);
                             }
                             // Data
-                            PlotType::Linear2d => {
+                            PlotType::PointsXY2d => {
                                 self.input_linear_2d(ui, i);
                             }
                             _ => {} // TODO
@@ -57,6 +57,13 @@ impl crate::Plotter {
                             }
 
                             egui::Ui::color_edit_button_rgb(ui, &mut self.plots[i].color);
+
+                            egui::ComboBox::from_label("").selected_text("Style")
+                                .show_ui(ui, |ui| {
+                                    ui.selectable_value(&mut self.plots[i].plot_style, PlotStyle::Lines, "Lines");
+                                    ui.selectable_value(&mut self.plots[i].plot_style, PlotStyle::Points, "Points");
+                                }
+                                );
                         });
 
                         ui.separator();
