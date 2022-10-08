@@ -55,7 +55,7 @@ impl crate::Plotter {
                         }
 
                         ui.horizontal(|ui| {
-                            if ui.button("Remove").clicked() && self.plots.len() != 1 {
+                            if ui.button("Remove").clicked() {
                                 plots_to_remove.push(i);
                             }
 
