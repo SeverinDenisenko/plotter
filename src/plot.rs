@@ -1,9 +1,10 @@
 use egui::plot::{Line, Plot, PlotPoints, Points};
 use egui::{Color32, Rgba};
 
-use crate::types::*;
+use crate::plot_type::*;
+use crate::app::Plotter;
 
-impl crate::Plotter {
+impl Plotter {
 
     //////// Plots for different plot types and providers ////////
 

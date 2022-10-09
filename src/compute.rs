@@ -1,7 +1,8 @@
 use meval::Expr;
 use crate::PlotType;
+use crate::app::Plotter;
 
-impl crate::Plotter {
+impl Plotter {
     pub fn compute_all(&mut self) {
         for i in 0..self.plots.len() {
             match self.plots[i].plot_type {

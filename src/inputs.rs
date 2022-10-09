@@ -1,10 +1,12 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use egui::{Color32, RichText, ScrollArea, TextStyle};
-use crate::types::*;
+use crate::plot_type::*;
 use rfd::FileDialog;
+use crate::app::Plotter;
 
-impl crate::Plotter {
+
+impl Plotter {
     //////// Input forms for different plot types ////////
 
     pub fn input_all(&mut self, ui: &mut egui::Ui) {
