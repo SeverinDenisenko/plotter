@@ -1,6 +1,6 @@
-use meval::Expr;
 use crate::PlotType;
 use crate::app::Plotter;
+use crate::parser::*;
 
 impl Plotter {
     pub fn compute_all(&mut self) {
@@ -21,18 +21,18 @@ impl Plotter {
     }
 
     pub fn parse_equal_grid(&mut self, plot_number: usize) {
-        let n_r = meval::eval_str(self.plots[plot_number].n_s.to_owned());
-        let a_r = meval::eval_str(self.plots[plot_number].a_s.to_owned());
-        let b_r = meval::eval_str(self.plots[plot_number].b_s.to_owned());
+        let n_r = parse_uint(self.plots[plot_number].n_s.to_owned());
+        let a_r = parse_float(self.plots[plot_number].a_s.to_owned());
+        let b_r = parse_float(self.plots[plot_number].b_s.to_owned());
 
         let mut has_an_error = false;
 
         match n_r {
             Ok(n) => {
-                self.plots[plot_number].n = n as u32;
+                self.plots[plot_number].n = n;
             }
             Err(e) => {
-                self.plots[plot_number].error_message = e.to_string();
+                self.plots[plot_number].error_message = e;
                 has_an_error = true;
             }
         };
@@ -42,7 +42,7 @@ impl Plotter {
                 self.plots[plot_number].a = a;
             }
             Err(e) => {
-                self.plots[plot_number].error_message = e.to_string();
+                self.plots[plot_number].error_message = e;
                 has_an_error = true;
             }
         };
@@ -52,7 +52,7 @@ impl Plotter {
                 self.plots[plot_number].b = b;
             }
             Err(e) => {
-                self.plots[plot_number].error_message = e.to_string();
+                self.plots[plot_number].error_message = e;
                 has_an_error = true;
             }
         };
@@ -153,27 +153,14 @@ impl Plotter {
     }
 
     fn get_parsed_function(&mut self, plot_number: usize, string: String, variable: String) -> impl Fn(f64) -> f64 {
-        let mut has_an_error = false;
-
-        let expr = match string.parse::<Expr>() {
-            Ok(res) => res,
+        let function = match parse_function(string, variable){
+            Ok(f) => f,
             Err(e) => {
-                self.plots[plot_number].error_message = e.to_string();
-                has_an_error = true;
-                variable.parse().unwrap()
+                self.plots[plot_number].has_an_error = true;
+                self.plots[plot_number].error_message = e;
+                parse_function("x".to_string(), "x".to_string()).unwrap()
             }
         };
-
-        let function = match expr.bind(variable.as_str()) {
-            Ok(res) => res,
-            Err(e) => {
-                self.plots[plot_number].error_message = e.to_string();
-                has_an_error = true;
-                variable.parse::<Expr>().unwrap().bind(variable.as_str()).unwrap()
-            }
-        };
-
-        self.plots[plot_number].has_an_error = has_an_error;
 
         return function;
     }

@@ -10,6 +10,7 @@ mod plot_type;
 mod compute;
 mod plot;
 mod inputs;
+mod parser;
 
 use app::*;
 use plot_type::*;
