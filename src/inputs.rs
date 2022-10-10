@@ -1,8 +1,11 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::path::Path;
+
 use egui::{Color32, RichText, ScrollArea, TextStyle};
-use crate::plot_type::*;
 use rfd::FileDialog;
+
+use crate::plot_type::*;
 use crate::app::Plotter;
 
 
@@ -115,10 +118,10 @@ impl Plotter {
         if ui.button("Open").clicked() {
             match self.plots[plot_number].plot_type {
                 PlotType::PointsXY2d => {
-                    self.load_data_x_y(plot_number);
+                    self.get_data_x_y(plot_number);
                 },
                 PlotType::PointsY2d => {
-                    self.load_data_y(plot_number);
+                    self.get_data_y(plot_number);
                 },
                 _ => {
                     //TODO
@@ -132,17 +135,8 @@ impl Plotter {
 
     //////// Common patterns ////////
 
-    fn load_data_x_y(&mut self, plot_number: usize) {
-        let path_o = FileDialog::new().pick_file();
-
-        let path = match path_o {
-            Some(f) => f,
-            None => {
-                return;
-            }
-        };
-
-        let file = match File::open(path.as_path()) {
+    pub fn load_data_x_y(&mut self, path: &Path, plot_number: usize){
+        let file = match File::open(path) {
             Ok(f) => f,
             Err(err) => {
                 self.plots[plot_number].has_an_error = true;
@@ -162,7 +156,7 @@ impl Plotter {
             }
         }).collect();
 
-        self.plots[plot_number].name = path.as_path().file_name().unwrap().to_str().unwrap().to_string();
+        self.plots[plot_number].name = path.file_name().unwrap().to_str().unwrap().to_string();
 
         self.plots[plot_number].n = 0;
         self.plots[plot_number].points.clear();
@@ -201,17 +195,8 @@ impl Plotter {
         self.plots[plot_number].are_data_computed = true;
     }
 
-    fn load_data_y(&mut self, plot_number: usize) {
-        let path_o = FileDialog::new().pick_file();
-
-        let path = match path_o {
-            Some(f) => f,
-            None => {
-                return;
-            }
-        };
-
-        let file = match File::open(path.as_path()) {
+    pub fn load_data_y(&mut self, path: &Path, plot_number: usize){
+        let file = match File::open(path) {
             Ok(f) => f,
             Err(err) => {
                 self.plots[plot_number].has_an_error = true;
@@ -231,7 +216,7 @@ impl Plotter {
             }
         }).collect();
 
-        self.plots[plot_number].name = path.as_path().file_name().unwrap().to_str().unwrap().to_string();
+        self.plots[plot_number].name = path.file_name().unwrap().to_str().unwrap().to_string();
 
         self.plots[plot_number].n = 0;
         self.plots[plot_number].points.clear();
@@ -255,6 +240,32 @@ impl Plotter {
         }
 
         self.plots[plot_number].are_data_computed = true;
+    }
+
+    fn get_data_x_y(&mut self, plot_number: usize) {
+        let path_o = FileDialog::new().pick_file();
+
+        let path = match path_o {
+            Some(f) => f,
+            None => {
+                return;
+            }
+        };
+
+        self.load_data_x_y(path.as_ref(), plot_number);
+    }
+
+    fn get_data_y(&mut self, plot_number: usize) {
+        let path_o = FileDialog::new().pick_file();
+
+        let path = match path_o {
+            Some(f) => f,
+            None => {
+                return;
+            }
+        };
+
+        self.load_data_y(path.as_ref(), plot_number);
     }
 
     fn input_uniform_grid(&mut self, ui: &mut egui::Ui, plot_number: usize) {

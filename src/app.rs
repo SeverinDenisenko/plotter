@@ -14,7 +14,7 @@ pub struct Plotter {
 impl Default for Plotter {
     fn default() -> Self {
         Self {
-            plots: vec![PlotItem::default_function()],
+            plots: vec![],
             plot_provider: PlotProvider::Egui,
         }
     }

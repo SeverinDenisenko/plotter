@@ -15,3 +15,17 @@ pub fn run_default(){
         Box::new(|_cc| Box::new(Plotter::default())),
     );
 }
+
+pub fn run(plotter: Plotter){
+    let options = eframe::NativeOptions {
+        default_theme: Theme::Light,
+        initial_window_size: Option::from(Vec2::new(900.0, 600.0)),
+        ..Default::default()
+    };
+
+    eframe::run_native(
+        "Plotter",
+        options,
+        Box::new(|_cc| Box::new(plotter)),
+    );
+}
